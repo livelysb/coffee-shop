@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:test_db;MODE=MYSQL
+
+  jpa:
+    database: h2
+    open-in-view: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect.storage_engine: innodb
+
+logging:
+  level:
+    root: DEBUG
