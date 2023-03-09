@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS `coffee`.`point_transaction`;
 CREATE TABLE `coffee`.`point_transaction`
 (
     `point_transaction_id` BIGINT      NOT NULL AUTO_INCREMENT COMMENT '포인트 이력 번호',
-    `user_seq`             BIGINT      NOT NULL COMMENT '유저 아이디',
+    `user_seq`             BIGINT      NOT NULL COMMENT '유저 시퀀스',
     `point`                BIGINT      NOT NULL COMMENT '충전/사용 포인트',
     `transaction_type`     VARCHAR(10) COMMENT '포인트 이력 구분',
     `transacted_at`        DATETIME(6) NOT NULL COMMENT '포인트 이력 일시',

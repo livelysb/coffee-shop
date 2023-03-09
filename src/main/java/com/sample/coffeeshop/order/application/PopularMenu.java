@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Schema(description = "인기메뉴")
-public class PopularMenu {
+public class PopularMenu implements Serializable {
     @Schema(description = "메뉴 ID")
     private Long menuId;
     @Schema(description = "메뉴명")

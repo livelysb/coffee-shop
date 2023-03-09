@@ -1,25 +1,30 @@
 package com.sample.coffeeshop.order.application;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 @Schema(description = "주문")
 public class OrderDto {
     @Schema(description = "주문 ID")
-    private Long orderId;
+    Long orderId;
     @Schema(description = "유저 ID")
-    private String userId;
+    String userId;
     @Schema(description = "메뉴 ID")
-    private Long menuId;
+    Long menuId;
     @Schema(description = "메뉴명", example = "아이스 아메리카노")
-    private String menuName;
+    String menuName;
     @Schema(description = "주문 가격")
-    private Long orderPrice;
+    Long orderPrice;
     @Schema(description = "주문일시")
-    private LocalDateTime orderedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    LocalDateTime orderedAt;
 }

@@ -1,4 +1,4 @@
-package com.sample.coffeeshop.config.advice;
+package com.sample.coffeeshop.common.advice;
 
 import com.sample.coffeeshop.common.CoffeeShopBadRequestException;
 import com.sample.coffeeshop.common.CoffeeShopErrors;

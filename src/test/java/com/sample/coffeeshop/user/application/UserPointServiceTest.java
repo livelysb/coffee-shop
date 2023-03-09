@@ -52,9 +52,7 @@ class UserPointServiceTest {
         given(userRepository.findByUserId(testUserId)).willReturn(Optional.of(user));
 
         // when & then
-        CoffeeShopBadRequestException e = Assertions.assertThrows(CoffeeShopBadRequestException.class, () -> {
-            userPointService.payment(testUserId, 4100L);
-        });
+        CoffeeShopBadRequestException e = Assertions.assertThrows(CoffeeShopBadRequestException.class, () -> userPointService.payment(testUserId, 4100L));
         Assertions.assertEquals(CoffeeShopErrors.INSUFFICIENT_USER_POINT, e.getError());
     }
 
@@ -81,8 +79,6 @@ class UserPointServiceTest {
         given(userRepository.findByUserId(anyString())).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> {
-            userPointService.charge(testUserId, 10000L);
-        });
+        Assertions.assertDoesNotThrow(() -> userPointService.charge(testUserId, 10000L));
     }
 }

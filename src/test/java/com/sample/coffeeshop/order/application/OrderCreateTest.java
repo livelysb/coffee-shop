@@ -7,6 +7,7 @@ import com.sample.coffeeshop.menu.domain.Menu;
 import com.sample.coffeeshop.menu.domain.MenuRepository;
 import com.sample.coffeeshop.order.domain.Order;
 import com.sample.coffeeshop.order.domain.OrderRepository;
+import com.sample.coffeeshop.user.application.UserPointService;
 import com.sample.coffeeshop.user.domain.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ActiveProfiles("test")
@@ -27,6 +27,9 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserPointService userPointService;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -42,8 +45,6 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
 
     private Menu savedMenu;
     private User savedUser;
-
-    private User savedUser_insufficientPoint;
 
     @BeforeEach
     void setUp() {
@@ -76,7 +77,7 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
 
     @DisplayName("동시에 두건의 주문")
     @Test
-    void concurrent_2orders() throws ExecutionException, InterruptedException {
+    void concurrent_2orders() {
 
         // given
         OrderCreateRequest request = new OrderCreateRequest(savedMenu.getMenuId(), savedUser.getUserId());
@@ -89,13 +90,14 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
         ).join();
 
         // then
-        Long userPoint = userRepository.findByUserId(request.getUserId()).get().getUserPoint();
+        User user = userRepository.findByUserId(request.getUserId()).get();
+        Long userPoint = user.getUserPoint();
         Assertions.assertEquals(10000L - 4200L - 4200L, userPoint);
     }
 
     @DisplayName("동시에 세건의 주문")
     @Test
-    void concurrent_3orders() throws ExecutionException, InterruptedException {
+    void concurrent_3orders() {
 
         // given
         OrderCreateRequest request = new OrderCreateRequest(savedMenu.getMenuId(), savedUser.getUserId());
@@ -104,9 +106,10 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
         // when
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> orderService.createOrder(request)),
+                CompletableFuture.runAsync(() -> orderService.createOrder(request)),
                 CompletableFuture.runAsync(() -> orderService.createOrder(request))
         ).exceptionally(throwable -> {
-            e.set(throwable);
+            e.set(throwable.getCause());
             return null;
         }).join();
 
@@ -114,6 +117,29 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
         Assertions.assertNotNull(e.get());
         Assertions.assertTrue(e.get() instanceof CoffeeShopException);
         Assertions.assertEquals(CoffeeShopErrors.INSUFFICIENT_USER_POINT, ((CoffeeShopException) e.get()).getError());
+
+    }
+
+    @DisplayName("주문과 충전을 동시에 진행")
+    @Test
+    void concurrent_order_charge() {
+
+        // given
+        OrderCreateRequest request = new OrderCreateRequest(savedMenu.getMenuId(), savedUser.getUserId());
+        AtomicReference<Throwable> e = new AtomicReference<>();
+
+        // when
+        CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> orderService.createOrder(request)),
+                CompletableFuture.runAsync(() -> userPointService.charge(request.getUserId(), 10000L)),
+                CompletableFuture.runAsync(() -> userPointService.charge(request.getUserId(), 5000L)),
+                CompletableFuture.runAsync(() -> orderService.createOrder(request))
+        ).join();
+
+        // then
+        User user = userRepository.findByUserId(request.getUserId()).get();
+        Long userPoint = user.getUserPoint();
+        Assertions.assertEquals(10000L - 4200L + 10000L + 5000L - 4200L, userPoint);
 
     }
 

@@ -1,37 +1,51 @@
 package com.sample.coffeeshop.order.application;
 
+import com.sample.coffeeshop.common.LockHandler;
+import com.sample.coffeeshop.common.TransactionHandler;
 import com.sample.coffeeshop.menu.application.MenuDto;
 import com.sample.coffeeshop.menu.application.MenuService;
 import com.sample.coffeeshop.order.domain.Order;
 import com.sample.coffeeshop.order.domain.OrderRepository;
 import com.sample.coffeeshop.order.domain.OrderRequest;
+import com.sample.coffeeshop.order.event.OrderCreatedEvent;
 import com.sample.coffeeshop.user.application.UserPointService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import static com.sample.coffeeshop.user.application.UserPointService.USER_POINT_LOCK_PREFIX;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderService {
 
-    private final OrderRepository orderRepository;
+    OrderRepository orderRepository;
+    MenuService menuService;
+    UserPointService userPointService;
+    LockHandler lockHandler;
+    TransactionHandler transactionHandler;
 
-    private final MenuService menuService;
+    ApplicationEventPublisher applicationEventPublisher;
 
-    private final UserPointService userPointService;
 
-    @Transactional
+
     public OrderDto createOrder(OrderCreateRequest request) {
-        final MenuDto menu = menuService.getMenu(request.getMenuId());
-        final Order order = orderRepository.save(new Order(new OrderRequest(menu, request.getUserId())));
-        userPointService.payment(request.getUserId(), order.getOrderPrice());
-        return order.toDto();
+        return lockHandler.runOnLock(
+                USER_POINT_LOCK_PREFIX + request.getUserId(),
+                2000L,
+                1000L,
+                () -> transactionHandler.runOnWriteTransaction(
+                        () -> {
+                            final MenuDto menu = menuService.getMenu(request.getMenuId());
+                            final Order order = new Order(new OrderRequest(menu, request.getUserId()));
+                            userPointService.payment(request.getUserId(), order.getOrderPrice());
+                            final OrderDto orderDto = orderRepository.save(order).toDto();
+                            applicationEventPublisher.publishEvent(new OrderCreatedEvent(orderDto));
+                            return orderDto;
+                        }));
     }
 
-    @Transactional(readOnly = true)
-    public List<PopularMenu> getPopularMenu() {
-        return orderRepository.findPopularMenu();
-    }
 }
