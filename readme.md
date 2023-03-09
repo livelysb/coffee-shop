@@ -6,6 +6,8 @@
 - Java 17
 - JPA
 - MySQL
+- Redis
+- Kafka
 - H2 (테스트 코드)
 
 ## ERD
