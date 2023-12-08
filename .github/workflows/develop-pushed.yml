@@ -1,0 +1,34 @@
+name: Build Dev order-api-v2 Image and Push to ECR
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+env:
+  APP_PROFILE: develop
+  APP_NAME: coffee-shop
+
+jobs:
+  get-image-tag:
+    name: Generate Image Tag
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.vars.outputs.sha_short }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: get short git sha
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+  build-api-and-push:
+    name: Build Interfaces and Push to ECR
+    needs: get-image-tag
+    runs-on: [ self-hosted, Linux, X64, jdk-11, cache ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Build and test with gradle
+        run: ./gradlew build
