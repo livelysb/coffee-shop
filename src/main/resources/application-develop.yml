@@ -1,18 +1,18 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: develop
 
   datasource:
-    url: jdbc:mysql://localhost:3306/coffee
-    username: coffee
-    password: coffee
+    url: jdbc:mysql://mysql:3306/coffee
+    username: ${db.user.name}
+    password: ${db.user.password}
     driver-class-name: com.mysql.jdbc.Driver
 
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     open-in-view: false
     properties:
       hibernate:
@@ -24,7 +24,7 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
 
@@ -32,6 +32,12 @@ spring:
   kafka:
     bootstrap-servers:
       - 'localhost:9092'
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
 #logging:
 #  level:
 #    root: DEBUG

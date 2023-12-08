@@ -1,0 +1,43 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/coffee
+    username: coffee
+    password: coffee
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+
+
+  kafka:
+    bootstrap-servers:
+      - 'localhost:9092'
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+#logging:
+#  level:
+#    root: DEBUG
