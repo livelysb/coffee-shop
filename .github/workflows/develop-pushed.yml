@@ -26,7 +26,7 @@ jobs:
   build-api-and-push:
     name: Build Interfaces and Push to ECR
     needs: get-image-tag
-    runs-on: [ self-hosted, Linux, X64, jdk-11, cache ]
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
