@@ -8,27 +8,15 @@ on:
 
 env:
   APP_PROFILE: develop
-  APP_NAME: coffee-shop
 
 jobs:
-  get-image-tag:
-    name: Generate Image Tag
-    runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${{ steps.vars.outputs.sha_short }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-      - name: get short git sha
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-  build-api-and-push:
-    name: Build Interfaces and Push to ECR
-    needs: get-image-tag
+  dev-build:
+    name: dev-build
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-      - name: Build and test with gradle
-        run: ./gradlew build
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+      - run: ./gradlew build
