@@ -2,6 +2,7 @@ package com.sample.coffeeshop.user.application;
 
 import com.sample.coffeeshop.common.CoffeeShopBadRequestException;
 import com.sample.coffeeshop.common.LockHandler;
+import com.sample.coffeeshop.common.TransactionHandler;
 import com.sample.coffeeshop.user.domain.PointTransaction;
 import com.sample.coffeeshop.user.domain.PointTransactionRepository;
 import com.sample.coffeeshop.user.domain.User;
@@ -19,6 +20,7 @@ public class UserPointService {
     private final PointTransactionRepository pointTransactionRepository;
 
     private final LockHandler lockHandler;
+    private final TransactionHandler transactionHandler;
 
     public static String USER_POINT_LOCK_PREFIX = "USER_";
 
@@ -29,18 +31,17 @@ public class UserPointService {
         pointTransactionRepository.save(PointTransaction.createByPayment(user, usingPoint));
     }
 
-    @Transactional
     public void charge(String userId, Long chargingPoint) {
         lockHandler.runOnLock(
                 USER_POINT_LOCK_PREFIX + userId,
                 2000L,
                 1000L,
-                () -> {
-                    User user = userRepository.findByUserId(userId).orElse(new User(userId));
-                    user.chargePoint(chargingPoint);
-                    pointTransactionRepository.save(PointTransaction.createByCharge(user, chargingPoint));
-                    return null;
-                });
-
+                () -> transactionHandler.runOnWriteTransaction(
+                        () -> {
+                            User user = userRepository.findByUserId(userId).orElse(new User(userId));
+                            user.chargePoint(chargingPoint);
+                            pointTransactionRepository.save(PointTransaction.createByCharge(user, chargingPoint));
+                            return null;
+                        }));
     }
 }
