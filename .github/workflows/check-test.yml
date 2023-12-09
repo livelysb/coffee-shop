@@ -8,5 +8,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check test with gradle
+      - name: Check test
         run: ./gradlew test
