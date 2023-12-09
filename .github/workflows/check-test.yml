@@ -1,4 +1,4 @@
-name: Pull Request Created
+name: Check test
 
 on: [pull_request]
 
@@ -8,5 +8,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Test with Gradle
+      - name: Check test with gradle
         run: ./gradlew test

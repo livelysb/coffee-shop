@@ -1,4 +1,4 @@
-name: Develop build
+name: [develop] Build
 
 on:
   push:
@@ -10,8 +10,8 @@ env:
   APP_PROFILE: develop
 
 jobs:
-  develop-build:
-    name: develop-build
+  build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,4 +19,4 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
-      - run: ./gradlew build
+      - run: ./gradlew build --debug
