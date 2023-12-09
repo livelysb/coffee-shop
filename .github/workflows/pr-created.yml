@@ -1,4 +1,4 @@
-name: Run Unit Tests with Gradle
+name: Pull Request Created
 
 on: [pull_request]
 

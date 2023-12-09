@@ -1,4 +1,4 @@
-name: Build Dev order-api-v2 Image and Push to ECR
+name: Develop build
 
 on:
   push:
@@ -10,8 +10,8 @@ env:
   APP_PROFILE: develop
 
 jobs:
-  dev-build:
-    name: dev-build
+  develop-build:
+    name: develop-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
