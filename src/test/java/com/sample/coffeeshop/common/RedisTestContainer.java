@@ -1,10 +1,14 @@
 package com.sample.coffeeshop.common;
 
+import org.junit.Test;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@TestConfiguration
+@Configuration
+@ActiveProfiles("test")
 public class RedisTestContainer {
     private static final String REDIS_DOCKER_IMAGE = "redis";
 

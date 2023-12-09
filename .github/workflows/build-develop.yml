@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  APP_PROFILE: develop
+  PROFILE: develop
 
 jobs:
   build:
