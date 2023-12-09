@@ -21,11 +21,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL57Dialect
         dialect.storage_engine: innodb
 
-  data:
-    redis:
-      host: localhost
-      port: 16379
-
 logging:
   level:
     root: DEBUG
