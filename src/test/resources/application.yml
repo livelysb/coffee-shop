@@ -1,8 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: test
-
   datasource:
     hikari:
       jdbc-url: jdbc:h2:mem:test_db;MODE=MYSQL
@@ -20,11 +16,6 @@ spring:
         default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.MySQL57Dialect
         dialect.storage_engine: innodb
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 logging:
   level:

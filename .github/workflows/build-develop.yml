@@ -1,0 +1,22 @@
+name: Build develop
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+env:
+  PROFILE: develop
+
+jobs:
+  build:
+    name: Build develop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+      - run: ./gradlew build

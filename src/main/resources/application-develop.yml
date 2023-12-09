@@ -1,8 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: develop
-
   datasource:
     url: jdbc:mysql://mysql:3306/coffee
     username: ${db.user.name}
@@ -27,8 +23,6 @@ spring:
       host: redis
       port: 6379
 
-
-
   kafka:
     bootstrap-servers:
       - 'localhost:9092'
@@ -37,7 +31,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-#logging:
-#  level:
-#    root: DEBUG

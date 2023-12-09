@@ -3,6 +3,7 @@ package com.sample.coffeeshop.order.application;
 import com.sample.coffeeshop.DatabaseCleanUpExecutor;
 import com.sample.coffeeshop.common.CoffeeShopErrors;
 import com.sample.coffeeshop.common.CoffeeShopException;
+import com.sample.coffeeshop.common.KafkaMessagePublisher;
 import com.sample.coffeeshop.menu.domain.Menu;
 import com.sample.coffeeshop.menu.domain.MenuRepository;
 import com.sample.coffeeshop.order.domain.Order;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -42,6 +44,9 @@ class OrderCreateTest extends DatabaseCleanUpExecutor {
 
     @Autowired
     private PointTransactionRepository pointTransactionRepository;
+
+    @MockBean
+    private KafkaMessagePublisher kafkaMessagePublisher;
 
     private Menu savedMenu;
     private User savedUser;
