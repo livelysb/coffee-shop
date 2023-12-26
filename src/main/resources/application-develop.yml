@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/coffee
+    url: jdbc:mysql://localhost:3306/coffee
     username: ${db.user.name}
     password: ${db.user.password}
     driver-class-name: com.mysql.jdbc.Driver
