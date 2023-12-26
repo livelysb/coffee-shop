@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "059192227255.dkr.ecr.ap-northeast-2.amazonaws.com/coffee-shop:51e045bf84330b875eb39ceaa9132a3ac101879c",
+      "image": "",
       "cpu": 0,
       "portMappings": [
         {
@@ -21,19 +21,16 @@
           "value": "develop"
         },
         {
-          "name": "AWS_ACCESS_KEY_ID",
-          "value": "AKIAQ3SBBWW3QFDTZX7T"
-        },
-        {
           "name": "TZ",
           "value": "Asia/Seoul"
-        },
-        {
-          "name": "AWS_SECRET_ACCESS_KEY",
-          "value": "AWaKxFghf684q54RzHgpkMEpjtEa18qM/wm6Ic4J"
         }
       ],
-      "environmentFiles": [],
+      "environmentFiles": [
+        {
+          "value": "arn:aws:s3:::livelysb-coffee-shop-dev/coffee-shop-dev.env",
+          "type": "s3"
+        }
+      ],
       "mountPoints": [],
       "volumesFrom": [],
       "ulimits": [],
@@ -41,7 +38,7 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-create-group": "true",
-          "awslogs-group": "/ecs/task-definition-1226",
+          "awslogs-group": "/ecs/coffee-shop-dev",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         },
