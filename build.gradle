@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.kafka:spring-kafka'
 
+    implementation 'ca.pjer:logback-awslogs-appender:1.6.0'
 
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
