@@ -1,0 +1,8 @@
+### 커피 주문
+POST {{host}}/order
+Content-Type: application/json
+
+{
+  "menuId": 1,
+  "userId": "livelysb"
+}
