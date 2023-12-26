@@ -1,0 +1,81 @@
+{
+  "family": "tdf-coffee-shop-dev",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "059192227255.dkr.ecr.ap-northeast-2.amazonaws.com/coffee-shop:51e045bf84330b875eb39ceaa9132a3ac101879c",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "name": "app-8080-tcp",
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "PROFILE",
+          "value": "develop"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "value": "AKIAQ3SBBWW3QFDTZX7T"
+        },
+        {
+          "name": "TZ",
+          "value": "Asia/Seoul"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": "AWaKxFghf684q54RzHgpkMEpjtEa18qM/wm6Ic4J"
+        }
+      ],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/task-definition-1226",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      }
+    },
+    {
+      "name": "redis",
+      "image": "public.ecr.aws/docker/library/redis:latest",
+      "cpu": 0,
+      "portMappings": [],
+      "essential": true,
+      "environment": [],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": []
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::059192227255:role/role-ecs-tasks",
+  "executionRoleArn": "arn:aws:iam::059192227255:role/role-ecs-tasks",
+  "networkMode": "awsvpc",
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "tags": []
+}
