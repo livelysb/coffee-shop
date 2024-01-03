@@ -6,3 +6,7 @@ Content-Type: application/json
   "menuId": 1,
   "userId": "livelysb"
 }
+
+### 주문 실패
+POST {{host}}/failed-order
+Content-Type: application/json
