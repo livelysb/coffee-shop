@@ -2,8 +2,6 @@ package com.sample.coffeeshop.user.application;
 
 import com.sample.coffeeshop.common.CoffeeShopBadRequestException;
 import com.sample.coffeeshop.common.CoffeeShopErrors;
-import com.sample.coffeeshop.common.LockHandler;
-import com.sample.coffeeshop.common.TransactionHandler;
 import com.sample.coffeeshop.user.domain.PointTransactionRepository;
 import com.sample.coffeeshop.user.domain.User;
 import com.sample.coffeeshop.user.domain.UserRepository;
@@ -16,9 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -31,11 +27,6 @@ class UserPointServiceTest {
     private UserRepository userRepository;
     @Mock
     private PointTransactionRepository pointTransactionRepository;
-    @Mock
-    private LockHandler lockHandler;
-
-    @Mock
-    private TransactionHandler transactionHandler;
 
     @DisplayName("정상적인 유저포인트 차감")
     @Test
@@ -72,14 +63,6 @@ class UserPointServiceTest {
         String testUserId = "livelysb";
         User user = new User(testUserId, 800L);
         given(userRepository.findByUserId(testUserId)).willReturn(Optional.of(user));
-        given(lockHandler.runOnLock(any(), any(), any(), any())).will(invocation -> {
-            Supplier<Void> supplier = invocation.getArgument(3);
-            return supplier.get();
-        });
-        given(transactionHandler.runOnWriteTransaction(any())).will(invocation -> {
-            Supplier<Void> supplier = invocation.getArgument(0);
-            return supplier.get();
-        });
 
         // when
         userPointService.charge(testUserId, 10000L);
@@ -94,14 +77,6 @@ class UserPointServiceTest {
         // given
         String testUserId = "livelysb";
         given(userRepository.findByUserId(anyString())).willReturn(Optional.empty());
-        given(lockHandler.runOnLock(any(), any(), any(), any())).will(invocation -> {
-            Supplier<Void> supplier = invocation.getArgument(3);
-            return supplier.get();
-        });
-        given(transactionHandler.runOnWriteTransaction(any())).will(invocation -> {
-            Supplier<Void> supplier = invocation.getArgument(0);
-            return supplier.get();
-        });
 
         // when & then
         Assertions.assertDoesNotThrow(() -> userPointService.charge(testUserId, 10000L));
