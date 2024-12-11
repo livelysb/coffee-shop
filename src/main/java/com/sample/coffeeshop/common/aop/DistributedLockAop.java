@@ -27,7 +27,7 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
 
     @Around("@annotation(com.sample.coffeeshop.common.aop.DistributedLock)")
-    public Object runOnLockWithTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object runOnLock(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         DistributedLock annotation = signature.getMethod().getAnnotation(DistributedLock.class);
 
